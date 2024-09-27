@@ -31,9 +31,8 @@ function startTimer(){
     const {h,m,s} = getArgs();
     const time = convertToMs(h,m,s);
     console.log(`Таймер установлен на ${h} ч, ${m} м, ${s} с`);
-    const timeout = setTimeout(()=>{
+    setTimeout(()=>{
         console.log('Сообщение, говорящее пользователю что время таймера вышло');
-        clearTimeout(timeout);
     },time)
 }
 
