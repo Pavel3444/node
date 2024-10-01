@@ -37,16 +37,28 @@ function convertToMs(h = 0,m = 0,s = 0){
 }
 function startTimer(){
     const {h,m,s,message} = getArgs();
-    const time = convertToMs(h,m,s);
-    notifier.notify(`Таймер установлен на ${h} ч, ${m} м, ${s} с`);
-    setTimeout(()=>{
-        notifier.notify({
-            title: 'Таймер:',
-            message: message || defaultMessage,
-            sound: 'Glass',
-            contentImage: customIconPath
-        });
-    },time)
+    if (h > 0 || m > 0 || s > 0){
+        const time = convertToMs(h,m,s);
+        const timerTitle = ["Таймер установлен на "]
+        if (!!h && h > 0)timerTitle.push(`${h} ч `)
+        if (!!m && m > 0)timerTitle.push(`${m} м `)
+        if (!!s && s > 0)timerTitle.push(`${s} с `)
+
+        notifier.notify(timerTitle.join(''));
+        setTimeout(()=>{
+            notifier.notify({
+                title: 'Таймер:',
+                message: message || defaultMessage,
+                sound: 'Glass',
+                contentImage: customIconPath
+            });
+        },time)
+    }
+    else {
+        notifier.notify("Сударь, вы ввели редкостную херню или невалидные параметры. Настоятельно рекомендую обратиться к документации");
+        console.error('not started');
+    }
+
 }
 
 startTimer();
