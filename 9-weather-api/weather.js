@@ -8,12 +8,12 @@ app.use(express.json());
 
 app.route('/weather').get(async (req,res)=>{
     const {token,city} = req.query;
-    if (!token && !city) res.status(400).send({ error: "Token и город обязательны." })
+    if (!token && !city) return res.status(400).send({ error: "Token и город обязательны." })
     try{
-    res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Type', 'application/json');
     const r = await getWeather(city, token);
     if (r.error){
-        res.status(400).send(r);
+        return res.status(400).send(r);
     }else{
         const weather = {
             title: "ПОГОДА",
@@ -45,11 +45,11 @@ app.route('/weather').get(async (req,res)=>{
 
 
 
-        res.status(200).send(weather);
+        return res.status(200).send(weather);
     }
         }catch (e){
         console.error("Ошибка при получении данных о погоде:", error);
-        res.status(500).send({ error: 'Ошибка сервера при получении данных о погоде' });
+        return res.status(500).send({ error: 'Ошибка сервера при получении данных о погоде' });
 
     }
 })

@@ -20,17 +20,59 @@ export const printHelp = ()=>{
     `)
 }
 
-export const printWeather = (data)=>{
+// export const printWeather = (data)=>{
+//     const weatherArray = [];
+//     if (data.name) weatherArray.push(`${translate('w2')} ${data.name}`)
+//     if (data.weather && data.weather[0]) {
+//         let desc = '';
+//         if ( data.weather[0].icon ) desc = `${getIcon(data.weather[0].icon)}`;
+//         if ( data.weather[0].description) desc = desc + " " + data.weather[0].description;
+//         if (desc) weatherArray.push(desc);
+//     }
+//     if (data.main){
+//         let temp = '';
+//         if (data.main.temp) temp = `${translate('w3')} ${data.main.temp}`;
+//         if (data.main.feels_like) temp = temp + `(${translate('w4')} ${data.main.feels_like})`;
+//         if (temp) weatherArray.push(temp);
+//
+//         if (data.main.humidity) weatherArray.push(`${translate('w5')} ${data.main.humidity}%`);
+//     }
+//     if (data.wind && data.wind.speed) weatherArray.push(`${translate('w6')} ${data.wind.speed}`);
+//
+//     console.log(dedent`
+//     ${chalk.bgBlue(translate('w1'))}
+//     ${weatherArray.filter(Boolean).join('\n')}
+//     `)
+// }
 
+export const printWeather = (data) => {
+    const weatherArray = [];
+    if (data.name) {
+        weatherArray.push(`${translate('w2')} ${data.name}`);
+    }
+    if (data.weather?.[0]) {
+        const icon = data.weather[0].icon ? getIcon(data.weather[0].icon) : '';
+        const description = data.weather[0].description || '';
+        const weatherDescription = `${icon} ${description}`.trim();
+        if (weatherDescription) weatherArray.push(weatherDescription);
+
+    }
+    if (data.main) {
+        const temperature = data.main.temp
+            ? `${translate('w3')} ${data.main.temp} (${translate('w4')} ${data.main.feels_like || ''})`
+            : '';
+        if (temperature.trim()) weatherArray.push(temperature);
+
+        if (data.main.humidity) {
+            weatherArray.push(`${translate('w5')} ${data.main.humidity}%`);
+        }
+    }
+    if (data.wind?.speed) {
+        weatherArray.push(`${translate('w6')} ${data.wind.speed}`);
+    }
 
     console.log(dedent`
     ${chalk.bgBlue(translate('w1'))}
-    ${[
-        data.name ? translate('w2') + " " + data.name : '',
-        data.weather && data.weather[0] && data.weather[0].icon && data.weather[0].description ? getIcon(data.weather[0].icon) + " " + data.weather[0].description : '',
-        data.main && data.main.temp ? translate('w3') + " " + data.main.temp : '' + (data.main && data.main.feels_like ? " (" + translate('w4') + " " + data.main.feels_like + ")" : ''),
-        data.main && data.main.humidity ? translate('w5') + " " + data.main.humidity + "%" : '',
-        data.wind && data.wind.speed ? translate('w6') + " " + data.wind.speed : ''
-    ].filter(Boolean).join('\n')}
-    `)
+    ${weatherArray.join('\n')}
+    `);
 }
