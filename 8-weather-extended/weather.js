@@ -12,7 +12,7 @@ import {initLang, translate} from "./utils/langs.js";
 
 const saveToken = async (token)=>{
     if (!token.length){
-        printError('no token (');
+        printError(translate('noToken'));
         return;
     }
     try {
@@ -38,7 +38,7 @@ const getForecast = async ()=>{
             const cities = await getKeyValue(TOKEN_DICTIONARY.city);
             for (const city of cities) {
                 const weather =  await getWeather(city);
-                printWeather(weather,'')
+                printWeather(weather)
             }
         }catch (e){
             printError(translate('globalError'), e.message)
@@ -49,22 +49,20 @@ const getForecast = async ()=>{
 async function initCli(){
      await initLang();
     const args = getArgs(process.argv);
-    if (args.h){
-      return printHelp();
+    switch (true) {
+        case !!args.h:
+            return printHelp();
+        case !!args.s:
+            return saveCity(args.s);
+        case !!args.t:
+            return saveToken(args.t);
+        case !!args.d:
+            return deleteCityValue(args.d);
+        case !!args.l:
+            return saveLangValue(args.l);
+        default:
+            return getForecast();
     }
-    if (args.s){
-        return saveCity(args.s);
-    }
-    if (args.t){
-      return  saveToken(args.t);
-    }
-    if (args.d){
-        return deleteCityValue(args.d);
-    }
-    if (args.l){
-        return saveLangValue(args.l)
-    }
-    return  getForecast();
 }
 
 

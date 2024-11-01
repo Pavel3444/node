@@ -39,9 +39,14 @@ export const deleteCityValue = async (value)=>{
     });
 }
 export const saveTokenValue = async (value)=>{
-    let data = await getData();
-    data[TOKEN_DICTIONARY.token] = value;
-    await promises.writeFile(filePath, JSON.stringify(data))
+    try {
+        let data = await getData();
+        data[TOKEN_DICTIONARY.token] = value;
+        await promises.writeFile(filePath, JSON.stringify(data))
+    }catch (e){
+        throw new Error(e.message)
+    }
+
 }
 export const saveLangValue = async (value)=>{
     if (value.toLowerCase() !== 'ru' && value.toLowerCase() !== 'en' ) {

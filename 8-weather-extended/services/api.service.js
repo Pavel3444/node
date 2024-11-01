@@ -34,11 +34,13 @@ export const getCityCord = async (city, token) => {
                 appid: token
             }
         });
-        const {lat, lon} = data[0];
-        return {
-            lat,
-            lon
-        }
+        if (data && data[0]) {
+            const {lat, lon} = data[0];
+            return {
+                lat,
+                lon
+            }
+        } else return null;
     } catch (e) {
         printError(translate('errTokenOrCity'));
     }
@@ -46,8 +48,14 @@ export const getCityCord = async (city, token) => {
 export const getWeather = async (city) => {
     const token = await getKeyValue(TOKEN_DICTIONARY.token);
     const lang =  await getKeyValue(TOKEN_DICTIONARY.lang);
-    if (!token)printError(translate('noToken'));
-    if (!city)printError(translate('noCity'));
+    if (!token) {
+        printError(translate('noToken'));
+        throw new Error(translate('noToken'))
+    }
+    if (!city) {
+        printError(translate('noCity'));
+        throw new Error(translate('noCity'))
+    }
     const cord = await getCityCord(city, token);
     if (!cord) {
         printError(translate('errCords'));

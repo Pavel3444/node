@@ -21,12 +21,16 @@ export const printHelp = ()=>{
 }
 
 export const printWeather = (data)=>{
+
+
     console.log(dedent`
     ${chalk.bgBlue(translate('w1'))}
-        ${translate('w2')} ${data.name}
-        ${getIcon(data.weather[0].icon)} ${data.weather[0].description}
-        ${translate('w3')} ${data.main.temp} (${translate('w4')} ${data.main.feels_like} )
-        ${translate('w5')} ${data.main.humidity}% 
-        ${translate('w6')} ${data.wind.speed}
+    ${[
+        data.name ? translate('w2') + " " + data.name : '',
+        data.weather && data.weather[0] && data.weather[0].icon && data.weather[0].description ? getIcon(data.weather[0].icon) + " " + data.weather[0].description : '',
+        data.main && data.main.temp ? translate('w3') + " " + data.main.temp : '' + (data.main && data.main.feels_like ? " (" + translate('w4') + " " + data.main.feels_like + ")" : ''),
+        data.main && data.main.humidity ? translate('w5') + " " + data.main.humidity + "%" : '',
+        data.wind && data.wind.speed ? translate('w6') + " " + data.wind.speed : ''
+    ].filter(Boolean).join('\n')}
     `)
 }
